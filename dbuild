@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Builds the docker container in the current directory and calls it `temp`. Allows other params to be sent in, such as --no-cache (if you forgot ./dbuildnocache is there for just that.)
+
+docker build --force-rm=false "$@" -t temp .

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Removes images listed as parameters
+
+docker rmi "$@"

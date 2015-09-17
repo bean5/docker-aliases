@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# tags the temp container as defined by parameter
+# deprecated: keeping for instructional purposes only. Using docker-compose is preferred,
+#  which can defined tags automatically and cleanly
+
+docker tag temp:latest $1:latest

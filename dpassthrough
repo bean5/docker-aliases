@@ -1,0 +1,79 @@
+#!/bin/bash
+
+##############################################################
+# this script does the following:
+# -- wraps "docker run" comand and forwards all arguments.
+# -- executes "docker logs" command and redirects stderr 
+#    to stdout so that any output in the docker container 
+#    is visable to the outside calling process.
+# -- executes "docker inspect" command and parses the "state"
+#    json map looking for "exitcode", "paused", and "running".
+# -- it acts on the docker container's "exitcode".  anything 
+#    other than a "0" is considered a failure.
+##############################################################
+# syntax:
+# fixed by ryanb
+# do not pass in parameters with an "=" in them.
+# bad examples: 
+# ./docker_run -p --name=my_name --entrypoint=/usr/bin/python my_image --version
+# ./docker_run -p -d -i --name=my_name --link=redis:redis my_image
+#
+# good examples:
+# ./docker_run -p --name my_name --entrypoint /usr/bin/python my_image --version
+# ./docker_run -p -d -i --name my_name --link redis:redis my_image
+##############################################################
+
+args=""
+name=""
+ep=""
+rcode=""
+detach="false"
+
+# get args
+while true; do
+  if [ $1 ]; then
+    flag=$1
+    value=$2
+    if [[ $1 == *=* ]]; then
+      temp=$1
+      read flag value <<< ${temp/"="/" "}
+    fi
+    if [ "$flag" == "-d" ]; then
+      detach="true"
+    elif [ "$flag" == "--entrypoint" ]; then
+      ep="$value"
+    elif [ "$flag" == "--name" ]; then
+      name="$value"
+    fi
+    args="$args $1"
+    shift
+  else
+    break # stop loop when no more args.
+  fi
+done
+
+if [ "$detach" == "false" ]; then
+  docker rm -f $name 1> /tmp/nil 2>/tmp/nil
+fi
+
+if [ "$ep" == "ssh" ]; then
+  detach="true"
+  docker run -d -P --name $name --link=dpcgw:dpcgw --hostname=dpcqa --entrypoint "/usr/sbin/sshd" dpcqa -D
+  ssh root@localhost -p 49153
+else
+  docker run $args 1>/tmp/nil 2>/tmp/nil
+  docker logs $name 2>&1 
+  rcode=$(docker inspect -f "{{ .State.ExitCode }}" $name)
+  running=$(docker inspect -f "{{ .State.Running }}" $name)
+  paused=$(docker inspect -f "{{ .State.Paused }}" $name)
+  echo "Running: $running, Paused: $paused, Exitcode: $rcode" 
+fi
+
+if [ "$detach" == "false" ]; then
+  docker rm -f $name 1>/tmp/nil 2>/tmp/nil
+fi
+
+if [ "$rcode" != "0" ]; then
+  exit 1
+fi
+exit 0

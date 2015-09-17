@@ -1,0 +1,1 @@
+Allow parameters to override defaults, such as default image name when building.

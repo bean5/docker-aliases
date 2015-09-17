@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Removes containers listed as parameters
+
+docker rm "$@"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Uses docker-compose to build and run what you specify
+
+# Remove any containers with the same name that are already running to avoid collision
+docker-compose stop $1
+
+docker-compose build $1 && docker-compose run $1
