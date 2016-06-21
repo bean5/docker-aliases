@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Builds the docker container in the current directory and calls it `temp`. Same as `dbuild`, but without using cache (sometimes docker caching is problematic).
-
-docker build --force-rm=false --no-cache -t temp .

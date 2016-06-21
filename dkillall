@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Shortcut for stopping all containers
-
-docker kill $(docker ps -q)

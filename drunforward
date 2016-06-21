@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# Runs the container called `temp`, forwarding the 80 port
-
-# Remove any containers with the same name that are already running to avoid collision
-docker stop tempRunning
-docker rm tempRunning
-
-docker run -d -p 80:80 --name tempRunning temp

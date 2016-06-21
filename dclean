@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# Removes extra images from docker
-
-drmstopped
-drmdangling

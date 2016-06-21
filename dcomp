@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Just shorten `docker-compose` to `dcomp`; near-ultimate docker laziness (see also dc)
-
-docker-compose "$@"

@@ -1,0 +1,40 @@
+alias d="docker"
+alias di="docker images"
+alias dps='docker ps "$@"'
+
+# docker-compose
+alias dc="docker-compose"
+alias dcomp="docker-compose"
+
+# Inspecting
+# Shortcut for inspecting a docker for IPAddress
+alias dgip="docker inspect --format '{{ .NetworkSettings.IPAddress }}' \$1"
+
+# Tagging
+alias dtagTemp="docker tag temp:latest \$1:latest"
+
+# Building
+alias db="docker-compose build"
+alias dbuild='docker build --force-rm=false "$@" -t temp .'
+alias dbuildnocache="docker build --force-rm=false --no-cache -t temp ."
+
+# Running/Stopping
+alias dbr='docker-compose build $1 && docker-compose run $1'
+alias dbu='docker-compose build $1 && docker-compose up $1'
+
+alias drun="docker stop tempRunning; docker rm tempRunning; docker run --rm -it --name tempRunning temp"
+alias drunforward="docker stop tempRunning; docker rm tempRunning; docker run -d -p 80:80 --name tempRunning temp"
+
+alias dstopall='docker stop $(docker ps -a -q)'
+alias dkillall='docker kill $(docker ps -q)'
+
+
+## docker cleanup
+alias drm='docker rm "$@"'
+alias drmStopped='docker rm -f $(docker ps -a -q)'
+alias drmi='docker rmi "$@"'
+alias docker.rm.merge-ids='for i in $(di | grep "\-y" | awk "{print $1}"); do docker rmi $i; done'
+alias dclean="docker.clean"
+alias docker.clean="docker.rmstopped; docker.rmdangling"
+alias docker.rmstopped='docker rm -f $(docker ps -a | grep Exited | awk \'{print $1}\')'
+alias docker.rmdangling='docker rmi $(docker images -q -f dangling=true)'

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Uses docker-compose to build all targets defined in docker-compose.yml
-
-docker-compose build

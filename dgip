@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# "docker get IP"
-# Shortcut for inspecting a docker for IPAddress
-
-docker inspect --format '{{ .NetworkSettings.IPAddress }}' $1

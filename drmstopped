@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Shortcut for having docker remove stopped containers
-
-docker rm -f `(docker ps -a | grep Exited | awk '{print $1}')`
